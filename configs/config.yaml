@@ -17,11 +17,13 @@
 
 server:
   http:
-    addr: 0.0.0.0:80
+    addr: 0.0.0.0:9080
+  log_level: debug
+
 data:
   database:
-    driver: "sqlite3"
-    connection: "/data/sqlite3/answer.db"
+    driver: "mysql"
+    connection: "answer_user:answer_password@tcp(mysql:3306)/answer_db"
   cache:
     file_path: "/data/cache/cache.db"
 i18n:
@@ -29,12 +31,11 @@ i18n:
 swaggerui:
   show: true
   protocol: http
-  host: 127.0.0.1
-  address: ':80'
+  host: 0.0.0.0
+  address: ":9080"
 service_config:
   upload_path: "/data/uploads"
 ui:
-  public_url: '/'
-  api_url: '/'
-  base_url: ''
-
+  public_url: "/community"
+  api_url: "/community"
+  base_url: "/community"
