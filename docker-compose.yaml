@@ -1,20 +1,8 @@
 services:
-  nginx:
-    image: nginx:latest
-    container_name: nginx
-    volumes:
-      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
-    depends_on:
-      - ghost
-      - apache-answer
-    environment:
-      - COOLIFY_FQDN=${COOLIFY_FQDN:-nginx.waack.dev} # Fallback for local testing
-
   ghost:
     image: ghost:latest
-    container_name: ghost
     environment:
-      url: http://localhost # Update this to match your domain if needed
+      url: https://${DOMAIN}
       database__client: mysql
       database__connection__host: mysql
       database__connection__user: ${DB_USER_GHOST}
@@ -24,12 +12,19 @@ services:
     depends_on:
       mysql:
         condition: service_healthy
+    networks:
+      - dokploy-network
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.ghost.rule=Host(`${DOMAIN}`)"
+      - "traefik.http.routers.ghost.entrypoints=websecure"
+      - "traefik.http.routers.ghost.tls.certResolver=letsencrypt"
+      - "traefik.http.services.ghost.loadbalancer.server.port=2368"
 
   apache-answer:
     build:
       context: .
       dockerfile: ./Dockerfile
-    container_name: apache-answer
     environment:
       DB_TYPE: mysql
       DB_HOST: mysql
@@ -42,17 +37,26 @@ services:
       ADMIN_EMAIL: ${ADMIN_EMAIL}
       CONTACT_EMAIL: ${ADMIN_EMAIL}
       ADMIN_PASSWORD: ${ANSWER_ADMIN_PASSWORD}
-      SITE_URL: http://localhost:4747/community # Update this if needed
+      SITE_URL: https://${DOMAIN}/community
       AUTO_INSTALL: true
     depends_on:
       mysql:
         condition: service_healthy
     volumes:
       - ./configs/config.yaml:/data/conf/config.yaml
+    networks:
+      - dokploy-network
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.apache-answer.rule=Host(`${DOMAIN}`) && PathPrefix(`/community`)"
+      - "traefik.http.routers.apache-answer.entrypoints=websecure"
+      - "traefik.http.routers.apache-answer.tls.certResolver=letsencrypt"
+      - "traefik.http.services.apache-answer.loadbalancer.server.port=4747"
+      - "traefik.http.middlewares.apache-answer-stripprefix.stripprefix.prefixes=/community"
+      - "traefik.http.routers.apache-answer.middlewares=apache-answer-stripprefix"
 
   mysql:
     image: mysql:latest
-    container_name: mysql
     restart: always
     environment:
       MYSQL_ROOT_PASSWORD: root_password
@@ -65,6 +69,12 @@ services:
     volumes:
       - mysql-data:/var/lib/mysql
       - ./mysql/init-scripts:/docker-entrypoint-initdb.d
+    networks:
+      - dokploy-network
 
 volumes:
   mysql-data:
+
+networks:
+  dokploy-network:
+    external: true
