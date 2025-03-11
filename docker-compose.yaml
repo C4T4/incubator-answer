@@ -1,21 +1,22 @@
 services:
   nginx:
     image: nginx:latest
-    #container_name: nginx
-    ports:
-      - "80"
+    container_name: nginx
     volumes:
       - ./nginx/nginx.conf:/etc/nginx/nginx.conf
     depends_on:
       - ghost
       - apache-answer
-      - mysql
+    environment:
+      - COOLIFY_FQDN=${COOLIFY_FQDN:-nginx.waack.dev} # Fallback for local testing
+    networks:
+      - coolify-network # Match Coolify’s network
 
   ghost:
     image: ghost:latest
-    #container_name: ghost
+    container_name: ghost
     environment:
-      url: http://localhost
+      url: http://localhost # Update this to match your domain if needed
       database__client: mysql
       database__connection__host: mysql
       database__connection__user: ${DB_USER_GHOST}
@@ -25,14 +26,14 @@ services:
     depends_on:
       mysql:
         condition: service_healthy
-    ports:
-      - "2368"
+    networks:
+      - coolify-network
 
   apache-answer:
     build:
       context: .
       dockerfile: ./Dockerfile
-    #container_name: apache-answer
+    container_name: apache-answer
     environment:
       DB_TYPE: mysql
       DB_HOST: mysql
@@ -45,19 +46,19 @@ services:
       ADMIN_EMAIL: ${ADMIN_EMAIL}
       CONTACT_EMAIL: ${ADMIN_EMAIL}
       ADMIN_PASSWORD: ${ANSWER_ADMIN_PASSWORD}
-      SITE_URL: http://localhost:4747/community
+      SITE_URL: http://localhost:4747/community # Update this if needed
       AUTO_INSTALL: true
     depends_on:
       mysql:
         condition: service_healthy
-    ports:
-      - "4747"
     volumes:
       - ./configs/config.yaml:/data/conf/config.yaml
+    networks:
+      - coolify-network
 
   mysql:
     image: mysql:latest
-    #container_name: mysql
+    container_name: mysql
     restart: always
     environment:
       MYSQL_ROOT_PASSWORD: root_password
@@ -70,9 +71,8 @@ services:
     volumes:
       - mysql-data:/var/lib/mysql
       - ./mysql/init-scripts:/docker-entrypoint-initdb.d
-    ports:
-      - "3306"
+    networks:
+      - coolify-network
 
 volumes:
-  answer-data:
   mysql-data:
