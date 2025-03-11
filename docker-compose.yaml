@@ -9,8 +9,6 @@ services:
       - apache-answer
     environment:
       - COOLIFY_FQDN=${COOLIFY_FQDN:-nginx.waack.dev} # Fallback for local testing
-    networks:
-      - coolify-network # Match Coolify’s network
 
   ghost:
     image: ghost:latest
@@ -26,8 +24,6 @@ services:
     depends_on:
       mysql:
         condition: service_healthy
-    networks:
-      - coolify-network
 
   apache-answer:
     build:
@@ -53,8 +49,6 @@ services:
         condition: service_healthy
     volumes:
       - ./configs/config.yaml:/data/conf/config.yaml
-    networks:
-      - coolify-network
 
   mysql:
     image: mysql:latest
@@ -71,8 +65,6 @@ services:
     volumes:
       - mysql-data:/var/lib/mysql
       - ./mysql/init-scripts:/docker-entrypoint-initdb.d
-    networks:
-      - coolify-network
 
 volumes:
   mysql-data:
