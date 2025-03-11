@@ -3,7 +3,7 @@ services:
     image: nginx:latest
     container_name: nginx
     ports:
-      - "80:80"
+      - "80"
     volumes:
       - ./nginx/nginx.conf:/etc/nginx/nginx.conf
     depends_on:
@@ -26,7 +26,7 @@ services:
       mysql:
         condition: service_healthy
     ports:
-      - "2368:2368"
+      - "2368"
 
   apache-answer:
     build:
@@ -45,13 +45,13 @@ services:
       ADMIN_EMAIL: ${ADMIN_EMAIL}
       CONTACT_EMAIL: ${ADMIN_EMAIL}
       ADMIN_PASSWORD: ${ANSWER_ADMIN_PASSWORD}
-      SITE_URL: http://localhost:9080/community
+      SITE_URL: http://localhost:4747/community
       AUTO_INSTALL: true
     depends_on:
       mysql:
         condition: service_healthy
     ports:
-      - "9080:9080"
+      - "4747"
     volumes:
       - ./configs/config.yaml:/data/conf/config.yaml
 
@@ -71,7 +71,7 @@ services:
       - mysql-data:/var/lib/mysql
       - ./mysql/init-scripts:/docker-entrypoint-initdb.d
     ports:
-      - "3306:3306"
+      - "3306"
 
 volumes:
   answer-data:
