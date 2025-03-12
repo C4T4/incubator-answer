@@ -16,12 +16,12 @@ services:
     container_name: ghost
     environment:
       url: http://localhost
-      database__client: postgres
+      database__client: mysql
       database__connection__host: db-ghost
       database__connection__user: ghost_user
       database__connection__password: ghost_password
       database__connection__database: ghost_db
-      database__connection__port: 5432
+      database__connection__port: 3306
     depends_on:
       - db-ghost
     ports:
@@ -73,24 +73,26 @@ services:
   #     - "3306:3306"
 
   db-ghost:
-    image: postgres
+    image: mysql:latest
     environment:
-      - POSTGRES_DB=ghost_db
-      - POSTGRES_USER=ghost_user
-      - POSTGRES_PASSWORD=ghost_password
+      - MYSQL_ROOT_PASSWORD=root_password
+      - MYSQL_DATABASE=ghost_db
+      - MYSQL_USER=ghost_user
+      - MYSQL_PASSWORD=ghost_password
     ports:
-      - 5432
+      - 3306
     volumes:
       - ghost-volume:/var/lib/postgresql/data
 
   db-answer:
-    image: postgres
+    image: mysql:latest
     environment:
-      - POSTGRES_DB=answer_db
-      - POSTGRES_USER=answer_user
-      - POSTGRES_PASSWORD=answer_password
+      - MYSQL_ROOT_PASSWORD=root_password
+      - MYSQL_DATABASE=answer_db
+      - MYSQL_USER=answer_user
+      - MYSQL_PASSWORD=answer_password
     ports:
-      - 5432
+      - 3306
     volumes:
       - answer-volume:/var/lib/postgresql/data
 
