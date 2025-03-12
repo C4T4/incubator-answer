@@ -30,7 +30,7 @@ services:
     image: hkotel/mealie:latest
     container_name: apache-answer
     ports:
-      - 9080
+      - 9000
 
   # apache-answer:
   #   build:
