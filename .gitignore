@@ -30,3 +30,5 @@ vendor/
 /new_answer
 
 dist/
+/data
+.env
