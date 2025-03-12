@@ -17,7 +17,7 @@
 
 server:
   http:
-    addr: 0.0.0.0:9080
+    addr: 0.0.0.0:80
   log_level: debug
 
 data:
@@ -32,7 +32,7 @@ swaggerui:
   show: true
   protocol: http
   host: 0.0.0.0
-  address: ":9080"
+  address: ":80"
 service_config:
   upload_path: "/data/uploads"
 ui:
