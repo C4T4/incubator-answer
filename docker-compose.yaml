@@ -16,8 +16,8 @@ services:
     container_name: ghost
     environment:
       url: http://localhost
-      database__client: mysql
-      database__connection__host: mysql
+      database__client: postgres
+      database__connection__host: db-ghost
       database__connection__user: ghost_user
       database__connection__password: ghost_password
       database__connection__database: ghost_db
