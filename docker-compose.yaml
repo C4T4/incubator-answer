@@ -9,8 +9,6 @@ services:
     depends_on:
       - ghost
       #- apache-answer
-    networks:
-      - shared-network
 
   ghost:
     image: ghost:latest
@@ -27,16 +25,12 @@ services:
       - db-ghost
     ports:
       - 2368
-    networks:
-      - shared-network
 
   apache-answer:
     image: hkotel/mealie:latest
     container_name: apache-answer
     ports:
       - 9080
-    networks:
-      - shared-network
 
   # apache-answer:
   #   build:
@@ -112,7 +106,3 @@ volumes:
   #mysql-data:
   ghost-volume:
   answer-volume:
-
-networks:
-  shared-network:
-    driver: bridge
