@@ -21,10 +21,9 @@ services:
       database__connection__user: ghost_user
       database__connection__password: ghost_password
       database__connection__database: ghost_db
-      database__connection__port: 3306
+      database__connection__port: 5432
     depends_on:
-      mysql:
-        condition: service_healthy
+      - db-ghost
     ports:
       - "2368:2368"
 
@@ -55,24 +54,48 @@ services:
   #   volumes:
   #     - ./configs/config.yaml:/data/conf/config.yaml
 
-  mysql:
-    image: mysql:latest
-    container_name: mysql
-    restart: always
+  # mysql:
+  #   image: mysql:latest
+  #   container_name: mysql
+  #   restart: always
+  #   environment:
+  #     MYSQL_ROOT_PASSWORD: root_password
+  #     MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
+  #   healthcheck:
+  #     test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+  #     interval: 2s
+  #     timeout: 1s
+  #     retries: 3
+  #   volumes:
+  #     - mysql-data:/var/lib/mysql
+  #     - ./mysql/init-scripts:/docker-entrypoint-initdb.d
+  #   ports:
+  #     - "3306:3306"
+
+  db-ghost:
+    image: postgres
     environment:
-      MYSQL_ROOT_PASSWORD: root_password
-      MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
-    healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
-      interval: 2s
-      timeout: 1s
-      retries: 3
-    volumes:
-      - mysql-data:/var/lib/mysql
-      - ./mysql/init-scripts:/docker-entrypoint-initdb.d
+      - POSTGRES_DB=ghost_db
+      - POSTGRES_USER=ghost_user
+      - POSTGRES_PASSWORD=ghost_password
     ports:
-      - "3306:3306"
+      - 5432
+    volumes:
+      - ghost-volume:/var/lib/postgresql/data
+
+  db-answer:
+    image: postgres
+    environment:
+      - POSTGRES_DB=answer_db
+      - POSTGRES_USER=answer_user
+      - POSTGRES_PASSWORD=answer_password
+    ports:
+      - 5432
+    volumes:
+      - answer-volume:/var/lib/postgresql/data
 
 volumes:
   #answer-data:
-  mysql-data:
+  #mysql-data:
+  ghost-volume:
+  answer-volume:
