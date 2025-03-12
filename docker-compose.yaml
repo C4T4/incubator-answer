@@ -49,7 +49,7 @@ services:
       ADMIN_EMAIL: ${ADMIN_EMAIL}
       CONTACT_EMAIL: ${ADMIN_EMAIL}
       ADMIN_PASSWORD: ${ANSWER_ADMIN_PASSWORD}
-      #SITE_URL: http://localhost:9080/community
+      SITE_URL: http://localhost:80/community
       AUTO_INSTALL: true
     depends_on:
       - db-answer
