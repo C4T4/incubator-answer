@@ -1,15 +1,14 @@
 services:
-  # nginx:
-  #   image: nginx:latest
-  #   container_name: nginx
-  #   ports:
-  #     - "80:80"
-  #   volumes:
-  #     - ./nginx/nginx.conf:/etc/nginx/nginx.conf
-  #   depends_on:
-  #     - ghost
-  #     #- apache-answer
-  #     - mysql
+  nginx:
+    image: nginx:latest
+    container_name: nginx
+    ports:
+      - "4444"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+    depends_on:
+      - ghost
+      #- apache-answer
 
   ghost:
     image: ghost:latest
