@@ -52,10 +52,9 @@ services:
       SITE_URL: http://localhost:9080/community
       AUTO_INSTALL: true
     depends_on:
-      mysql:
-        condition: service_healthy
+      - db-answer
     ports:
-      - "9080:9080"
+      - 9080
     volumes:
       - ./configs/config.yaml:/data/conf/config.yaml
 
