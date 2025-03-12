@@ -31,7 +31,7 @@ services:
       - shared-network
 
   apache-answer:
-    image: node:latest
+    image: hkotel/mealie:latest
     container_name: apache-answer
     ports:
       - 9080
