@@ -27,7 +27,7 @@ services:
       - 2368
 
   apache-answer:
-    image: apache/answer:latest
+    image: 01011001/qa:latest
     container_name: apache-answer
     ports:
       - 80
