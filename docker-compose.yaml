@@ -30,7 +30,7 @@ services:
     image: apache/answer:latest
     container_name: apache-answer
     ports:
-      - 9080
+      - 80
 
   # apache-answer:
   #   build:
