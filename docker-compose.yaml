@@ -26,37 +26,37 @@ services:
     ports:
       - 2368
 
-  apache-answer:
-    image: apache/answer:latest
+  # apache-answer:
+  #   image: apache/answer:latest
+  #   container_name: apache-answer
+  #   ports:
+  #     - 80
+
+   apache-answer:
+    build:
+      context: .
+      dockerfile: ./Dockerfile
     container_name: apache-answer
+    environment:
+      DB_TYPE: mysql
+      DB_HOST: db-answer
+      DB_USERNAME: answer_user
+      DB_PASSWORD: answer_password
+      LANGUAGE: de_DE
+      SITE_NAME: Community
+      DB_NAME: answer_db
+      ADMIN_NAME: admin
+      ADMIN_EMAIL: ${ADMIN_EMAIL}
+      CONTACT_EMAIL: ${ADMIN_EMAIL}
+      ADMIN_PASSWORD: ${ANSWER_ADMIN_PASSWORD}
+      #SITE_URL: http://localhost:9080/community
+      AUTO_INSTALL: true
+    depends_on:
+      - db-answer
     ports:
       - 80
-
-  # apache-answer:
-  #   build:
-  #     context: .
-  #     dockerfile: ./Dockerfile
-  #   container_name: apache-answer
-  #   environment:
-  #     DB_TYPE: mysql
-  #     DB_HOST: db-answer
-  #     DB_USERNAME: answer_user
-  #     DB_PASSWORD: answer_password
-  #     LANGUAGE: de_DE
-  #     SITE_NAME: Community
-  #     DB_NAME: answer_db
-  #     ADMIN_NAME: admin
-  #     ADMIN_EMAIL: ${ADMIN_EMAIL}
-  #     CONTACT_EMAIL: ${ADMIN_EMAIL}
-  #     ADMIN_PASSWORD: ${ANSWER_ADMIN_PASSWORD}
-  #     #SITE_URL: http://localhost:9080/community
-  #     AUTO_INSTALL: true
-  #   depends_on:
-  #     - db-answer
-  #   ports:
-  #     - 9080
-  #   volumes:
-  #     - ./configs/config.yaml:/data/conf/config.yaml
+    volumes:
+      - ./configs/config.yaml:/data/conf/config.yaml
 
   # mysql:
   #   image: mysql:latest
