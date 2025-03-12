@@ -25,7 +25,7 @@ services:
     depends_on:
       - db-ghost
     ports:
-      - "2368:2368"
+      - 2368
 
   # apache-answer:
   #   build:
