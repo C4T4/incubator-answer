@@ -26,38 +26,38 @@ services:
     ports:
       - 2368
 
-  apache-answer:
-    image: hkotel/mealie:latest
-    container_name: apache-answer
-    ports:
-      - 9000
-
   # apache-answer:
-  #   build:
-  #     context: .
-  #     dockerfile: ./Dockerfile
+  #   image: hkotel/mealie:latest
   #   container_name: apache-answer
-  #   environment:
-  #     DB_TYPE: mysql
-  #     DB_HOST: mysql
-  #     DB_USERNAME: ${DB_USER_APACHE_ANSWER}
-  #     DB_PASSWORD: ${DB_PASSWORD_APACHE_ANSWER}
-  #     LANGUAGE: de_DE
-  #     SITE_NAME: Community
-  #     DB_NAME: ${DB_NAME_APACHE_ANSWER}
-  #     ADMIN_NAME: admin
-  #     ADMIN_EMAIL: ${ADMIN_EMAIL}
-  #     CONTACT_EMAIL: ${ADMIN_EMAIL}
-  #     ADMIN_PASSWORD: ${ANSWER_ADMIN_PASSWORD}
-  #     SITE_URL: http://localhost:9080/community
-  #     AUTO_INSTALL: true
-  #   depends_on:
-  #     mysql:
-  #       condition: service_healthy
   #   ports:
-  #     - "9080:9080"
-  #   volumes:
-  #     - ./configs/config.yaml:/data/conf/config.yaml
+  #     - 9000
+
+  apache-answer:
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    container_name: apache-answer
+    environment:
+      DB_TYPE: mysql
+      DB_HOST: mysql
+      DB_USERNAME: ${DB_USER_APACHE_ANSWER}
+      DB_PASSWORD: ${DB_PASSWORD_APACHE_ANSWER}
+      LANGUAGE: de_DE
+      SITE_NAME: Community
+      DB_NAME: ${DB_NAME_APACHE_ANSWER}
+      ADMIN_NAME: admin
+      ADMIN_EMAIL: ${ADMIN_EMAIL}
+      CONTACT_EMAIL: ${ADMIN_EMAIL}
+      ADMIN_PASSWORD: ${ANSWER_ADMIN_PASSWORD}
+      SITE_URL: http://localhost:9080/community
+      AUTO_INSTALL: true
+    depends_on:
+      mysql:
+        condition: service_healthy
+    ports:
+      - "9080:9080"
+    volumes:
+      - ./configs/config.yaml:/data/conf/config.yaml
 
   # mysql:
   #   image: mysql:latest
